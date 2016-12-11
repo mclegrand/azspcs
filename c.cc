@@ -5,7 +5,7 @@
 #include <cstdlib>
 #include <ctime>
 
-#define n 11
+#define n 29
 
 using namespace std;
 
@@ -48,14 +48,14 @@ bool no_intersect(int a)
 {
     for (int i=0;i<a-1;i++){
         int j = a-1;
-        int rs = vx[i % n] * vy[j % n] - vx[j % n] * vy[i % n];
+        int rs = vx[i] * vy[j] - vx[j] * vy[i];
         if(!rs) return false;
     }
     for (int i = 0; i < a - 2; i++) {
         int j = a - 1;
-        int rs = vx[i % n] * vy[j % n] - vx[j % n] * vy[i % n];
-        int t0 = (x[j % n] - x[i % n]) * vy[j % n] - (y[j % n] - y[i % n]) * vx[j % n];
-        int t1 = (x[j % n] - x[i % n]) * vy[i % n] - (y[j % n] - y[i % n]) * vx[i % n];
+        int rs = vx[i] * vy[j] - vx[j] * vy[i];
+        int t0 = (x[j] - x[i]) * vy[j] - (y[j] - y[i]) * vx[j];
+        int t1 = (x[j] - x[i]) * vy[i] - (y[j] - y[i]) * vx[i];
         if (rs < 0) {
             rs = 0 - rs;
             t0 = 0 - t0;
@@ -68,14 +68,14 @@ bool no_intersect(int a)
     if (a == n - 1) {
         for (int i=0;i<n-1;i++){
             int j = n-1;
-            int rs = vx[i % n] * vy[j % n] - vx[j % n] * vy[i % n];
+            int rs = vx[i] * vy[j] - vx[j] * vy[i];
             if(!rs) return false;
         }
         for (int i = 1; i < n - 2; i++) {
             int j = n - 1;
-            int rs = vx[i % n] * vy[j % n] - vx[j % n] * vy[i % n];
-            int t0 = (x[j % n] - x[i % n]) * vy[j % n] - (y[j % n] - y[i % n]) * vx[j % n];
-            int t1 = (x[j % n] - x[i % n]) * vy[i % n] - (y[j % n] - y[i % n]) * vx[i % n];
+            int rs = vx[i] * vy[j] - vx[j] * vy[i];
+            int t0 = (x[j] - x[i]) * vy[j] - (y[j] - y[i]) * vx[j];
+            int t1 = (x[j] - x[i]) * vy[i] - (y[j] - y[i]) * vx[i];
             if (rs < 0) {
                 rs = 0 - rs;
                 t0 = 0 - t0;
