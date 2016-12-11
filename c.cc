@@ -5,7 +5,7 @@
 #include <cstdlib>
 #include <ctime>
 
-#define n 17
+#define n 7
 
 using namespace std;
 
@@ -18,7 +18,8 @@ vector<int> y(n);
 int maxarea = 0;
 int minarea = n * n * 2;
 
-bool used[n] = {};
+int available[n];
+int num_available = n;
 
 int gt = 0;
 
@@ -105,16 +106,9 @@ void backtrack(int a)
         }
         return;
     }
-    int p[n];
-    for (int i = 0; i < n; i++) {
-        p[i] = i;
-    }
-    // random_shuffle(p.begin(), p.end());
 
-
-    for (auto val : p) {
-        if(used[val]) continue;
-        used[val]=true;
+    for (int i = 0; i < num_available; ++i) {
+        int val = available[i];
         y[a] = val;
         if (a > 0) {
             vx[a - 1] = x[a % n] - x[a - 1];
@@ -126,12 +120,16 @@ void backtrack(int a)
         }
 
         if (!no_intersect(a)) {
-            used[val]=false;
             continue;
         }
         //on peut mettre i en pos a
+        available[i] = available[num_available - 1];
+        available[num_available - 1] = val;
+        num_available--;
         backtrack(a + 1);
-        used[val]=false;
+        num_available++;
+        available[num_available - 1] = available[i];
+        available[i] = val;
     }
 }
 
@@ -150,8 +148,9 @@ int main()
         backtrack(0);
         gt = 0;
         for (int i = 0; i < n; ++i) {
-          used[i] = false;
+          available[i] = i;
         }
+        num_available = n;
         t++;
         //printf("%d/100\n", t);
     // } while (t < 100000000);//
