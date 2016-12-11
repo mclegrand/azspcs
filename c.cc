@@ -5,12 +5,12 @@
 #include <cstdlib>
 #include <ctime>
 
-#define n 29
+#define n 17
 
 using namespace std;
 
-vector<int> vx(n); //vx,vy[i] is vector from i to i+1
-vector<int> vy(n);
+int vx[n]; //vx,vy[i] is vector from i to i+1
+int vy[n];
 
 vector<int> x(n);
 vector<int> y(n);
@@ -18,11 +18,7 @@ vector<int> y(n);
 int maxarea = 0;
 int minarea = n * n * 2;
 
-vector<int> xmax(n);
-vector<int> ymax(n);
-vector<int> xmin(n);
-vector<int> ymin(n);
-vector<bool> used(n,false);
+bool used[n] = {};
 
 int gt = 0;
 
@@ -99,15 +95,11 @@ void backtrack(int a)
         int ar = area();
         if (ar > maxarea) {
             maxarea = ar;
-            xmax = x;
-            ymax = y;
             printf("%d:\n", ar);
             pv(x, y);
         }
         if (ar < minarea) {
             minarea = ar;
-            xmin = x;
-            ymin = y;
             printf("%d:\n", ar);
             pv(x, y);
         }
@@ -117,7 +109,7 @@ void backtrack(int a)
     for (int i = 0; i < n; i++) {
         p[i] = i;
     }
-    random_shuffle(p.begin(), p.end());
+    // random_shuffle(p.begin(), p.end());
 
 
     for (auto val : p) {
@@ -154,14 +146,16 @@ int main()
         x[i] = y[i] = i;
     }
     do {
-        random_shuffle(x.begin(), x.end()); //
+    //     random_shuffle(x.begin(), x.end()); //
         backtrack(0);
         gt = 0;
-        std::fill(used.begin(), used.end(), false);
+        for (int i = 0; i < n; ++i) {
+          used[i] = false;
+        }
         t++;
         //printf("%d/100\n", t);
-    } while (t < 100000000);//
-    //    } while (next_permutation(x.begin(),x.end()) );//
+    // } while (t < 100000000);//
+        } while (next_permutation(x.begin(),x.end()) );//
 
     return 0;
 }
