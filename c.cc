@@ -40,7 +40,7 @@ void pv(const vector<int> &vx, const vector<int> &vy)
     printf("\n");
 }
 
-bool no_intersect(int a)
+inline bool no_intersect(int a)
 {
     for (int i=0;i<a-1;i++){
         int j = a-1;
@@ -105,7 +105,7 @@ void backtrack(int a)
         }
         return;
     }
-    vector<int>p(n);
+    int p[n];
     for (int i = 0; i < n; i++) {
         p[i] = i;
     }
