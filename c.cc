@@ -5,7 +5,7 @@
 #include <cstdlib>
 #include <ctime>
 
-#define n 29
+#define n 17
 
 using namespace std;
 
@@ -17,6 +17,7 @@ vector<int> y(n);
 
 int maxarea = 0;
 int minarea = n * n * 2;
+int p[n];
 
 vector<int> xmax(n);
 vector<int> ymax(n);
@@ -89,6 +90,21 @@ bool no_intersect(int a)
     return true;
 }
 
+bool EXPERIMENT(int a){
+//answers true if the angles are acute/flat enough, to find minimal areas.
+if(a>1){
+int ps = vx[a-2]*vx[a-1]+vy[a-2]*vy[a-1];
+ps = ps*ps;
+int s1 = vx[a-1]*vx[a-1]+vy[a-1]*vy[a-1];
+int s2 = vx[a-2]*vx[a-2]+vy[a-2]*vy[a-2];
+float x = float(ps)/(float(s1)*float(s2));
+return x>0.8;
+}
+return true;
+}
+
+
+
 void backtrack(int a)
 {
     gt++;
@@ -113,11 +129,10 @@ void backtrack(int a)
         }
         return;
     }
-    vector<int>p(n);
     for (int i = 0; i < n; i++) {
         p[i] = i;
     }
-    random_shuffle(p.begin(), p.end());
+    //random_shuffle(p.begin(), p.end());
 
 
     for (auto val : p) {
@@ -132,8 +147,7 @@ void backtrack(int a)
             vx[n - 1] = x[0] - x[n - 1];
             vy[n - 1] = y[0] - y[n - 1];
         }
-
-        if (!no_intersect(a)) {
+        if (!no_intersect(a) /*|| !EXPERIMENT(a)*/) {
             used[val]=false;
             continue;
         }
