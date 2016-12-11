@@ -17,6 +17,7 @@ vector<int> y(n);
 
 int maxarea = 0;
 int minarea = n * n * 2;
+int p[n];
 
 int available[n];
 int num_available = n;
@@ -86,6 +87,21 @@ inline bool no_intersect(int a)
     return true;
 }
 
+bool EXPERIMENT(int a){
+//answers true if the angles are acute/flat enough, to find minimal areas.
+if(a>1){
+int ps = vx[a-2]*vx[a-1]+vy[a-2]*vy[a-1];
+ps = ps*ps;
+int s1 = vx[a-1]*vx[a-1]+vy[a-1]*vy[a-1];
+int s2 = vx[a-2]*vx[a-2]+vy[a-2]*vy[a-2];
+float x = float(ps)/(float(s1)*float(s2));
+return x>0.8;
+}
+return true;
+}
+
+
+
 void backtrack(int a)
 {
     gt++;
@@ -119,7 +135,7 @@ void backtrack(int a)
             vy[n - 1] = y[0] - y[n - 1];
         }
 
-        if (!no_intersect(a)) {
+        if (!no_intersect(a) /*|| !EXPERIMENT(a)*/) {
             continue;
         }
         //on peut mettre i en pos a
