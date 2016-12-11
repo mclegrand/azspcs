@@ -22,7 +22,6 @@ vector<int> xmax(n);
 vector<int> ymax(n);
 vector<int> xmin(n);
 vector<int> ymin(n);
-set<float> vn;//normalized
 vector<bool> used(n,false);
 
 int gt = 0;
@@ -47,6 +46,11 @@ void pv(const vector<int> &vx, const vector<int> &vy)
 
 bool no_intersect(int a)
 {
+    for (int i=0;i<a-1;i++){
+        int j = a-1;
+        int rs = vx[i % n] * vy[j % n] - vx[j % n] * vy[i % n];
+        if(!rs) return false;
+    }
     for (int i = 0; i < a - 2; i++) {
         int j = a - 1;
         int rs = vx[i % n] * vy[j % n] - vx[j % n] * vy[i % n];
@@ -62,6 +66,11 @@ bool no_intersect(int a)
         }
     }
     if (a == n - 1) {
+        for (int i=0;i<n-1;i++){
+            int j = n-1;
+            int rs = vx[i % n] * vy[j % n] - vx[j % n] * vy[i % n];
+            if(!rs) return false;
+        }
         for (int i = 1; i < n - 2; i++) {
             int j = n - 1;
             int rs = vx[i % n] * vy[j % n] - vx[j % n] * vy[i % n];
@@ -76,26 +85,6 @@ bool no_intersect(int a)
                 return false;
             }
         }
-    }
-    return true;
-}
-/*
-inline bool yhas(int a, int val)
-{
-    for (int i = 0; i < a; i++) if (y[i] == val) {
-            return true;
-        }
-    return false;
-}*/
-inline bool penteok(int a)
-{
-    if (!vn.insert((float)(y[a] - y[a - 1]) / (float)(x[a] - x[a - 1])).second) {
-        return false;
-    }
-
-    if (a == n - 1 && !vn.insert((float)(y[0] - y[n - 1]) / (float)(x[0] - x[n - 1])).second) {
-        vn.erase((float)(y[a] - y[a - 1]) / (float)(x[a] - x[a - 1]));
-        return false;
     }
     return true;
 }
@@ -133,9 +122,6 @@ void backtrack(int a)
 
     for (auto val : p) {
         if(used[val]) continue;
-//        if (yhas(a, val)) {
-//            continue;
-//        }
         used[val]=true;
         y[a] = val;
         if (a > 0) {
@@ -147,21 +133,13 @@ void backtrack(int a)
             vy[n - 1] = y[0] - y[n - 1];
         }
 
-        if (!penteok(a)) {
-            used[val]=false;
-            continue;
-        }
         if (!no_intersect(a)) {
             used[val]=false;
-            vn.erase((float)(y[a] - y[a - 1]) / (float)(x[a] - x[a - 1]));
-            if(a==n-1) vn.erase((float)(y[a] - y[a - 1]) / (float)(x[a] - x[a - 1]));
             continue;
         }
         //on peut mettre i en pos a
         backtrack(a + 1);
         used[val]=false;
-        vn.erase((float)(y[a] - y[a - 1]) / (float)(x[a] - x[a - 1]));
-        if(a==n-1) vn.erase((float)(y[a] - y[a - 1]) / (float)(x[a] - x[a - 1]));
     }
 }
 
@@ -180,7 +158,6 @@ int main()
         backtrack(0);
         gt = 0;
         std::fill(used.begin(), used.end(), false);
-        vn.clear();
         t++;
         //printf("%d/100\n", t);
     } while (t < 100000000);//
