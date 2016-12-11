@@ -23,6 +23,7 @@ vector<int> ymax(n);
 vector<int> xmin(n);
 vector<int> ymin(n);
 set<float> vn;//normalized
+vector<bool> used(n,false);
 
 int gt = 0;
 
@@ -78,14 +79,14 @@ bool no_intersect(int a)
     }
     return true;
 }
-
+/*
 inline bool yhas(int a, int val)
 {
     for (int i = 0; i < a; i++) if (y[i] == val) {
             return true;
         }
     return false;
-}
+}*/
 inline bool penteok(int a)
 {
     if (!vn.insert((float)(y[a] - y[a - 1]) / (float)(x[a] - x[a - 1])).second) {
@@ -131,9 +132,11 @@ void backtrack(int a)
 
 
     for (auto val : p) {
-        if (yhas(a, val)) {
-            continue;
-        }
+        if(used[val]) continue;
+//        if (yhas(a, val)) {
+//            continue;
+//        }
+        used[val]=true;
         y[a] = val;
         if (a > 0) {
             vx[a - 1] = x[a % n] - x[a - 1];
@@ -145,15 +148,18 @@ void backtrack(int a)
         }
 
         if (!penteok(a)) {
+            used[val]=false;
             continue;
         }
         if (!no_intersect(a)) {
+            used[val]=false;
             vn.erase((float)(y[a] - y[a - 1]) / (float)(x[a] - x[a - 1]));
             if(a==n-1) vn.erase((float)(y[a] - y[a - 1]) / (float)(x[a] - x[a - 1]));
             continue;
         }
         //on peut mettre i en pos a
         backtrack(a + 1);
+        used[val]=false;
         vn.erase((float)(y[a] - y[a - 1]) / (float)(x[a] - x[a - 1]));
         if(a==n-1) vn.erase((float)(y[a] - y[a - 1]) / (float)(x[a] - x[a - 1]));
     }
@@ -173,6 +179,7 @@ int main()
         random_shuffle(x.begin(), x.end()); //
         backtrack(0);
         gt = 0;
+        std::fill(used.begin(), used.end(), false);
         vn.clear();
         t++;
         //printf("%d/100\n", t);
